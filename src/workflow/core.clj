@@ -1,6 +1,8 @@
 (ns workflow.core
   (:require [clojure.string :as string]))
 
+(def ^:const FAIL :__fail__)
+
 (defn fn->str [f]
   (let [match #(re-find #"^(.*)@" %)]
     (-> f
@@ -12,13 +14,14 @@
 
 (defn run-step [step env]
   (let [label (fn->str step)
-        result (try
-                 [label :ok (step env)]
-                 (catch Exception e
-                   [label :error e]))]
+        log (try
+              (let [result (step env)]
+                [label (if (not= FAIL result) :ok :error) result])
+              (catch Exception e
+                [label :error e]))]
     (-> env
-        (assoc :ok? (-> result (get 1) (= :ok)))
-        (update :results conj result))))
+        (assoc :ok? (-> log (get 1) (= :ok)))
+        (update :results conj log))))
 
 (defn- embellish [step]
   (fn [env]
