@@ -7,8 +7,7 @@
   (fn [params]
     (let [f (->> steps
                  (reverse)
-                 (map (fn [[label step destination]]
-                        ((step/embellish label destination) step)))
+                 (map step/embellish)
                  (apply comp))]
       (f {:params params
           :ok? true

@@ -2,7 +2,7 @@
 
 (def ^:const FAIL :__fail__)
 
-(defn log [label]
+(defn log [label _]
   (fn [step]
     (fn [env]
       (let [result (try
@@ -18,10 +18,11 @@
             (assoc :ok? (-> log (get 1) (= :ok)))
             (update :results conj log))))))
 
-(defn maybe [step]
-  (fn [env]
-    (cond-> env
-      (:ok? env) (step))))
+(defn maybe [_ _]
+  (fn [step]
+    (fn [env]
+      (cond-> env
+        (:ok? env) (step)))))
 
 (defn cache [label destination]
   (fn [step]
@@ -35,7 +36,8 @@
         (cond-> env
           destination (assoc-in [:params destination] result))))))
 
-(defn embellish [label destination]
-  (comp (cache label destination)
-        maybe
-        (log label)))
+(defn embellish [[label step-fn destination]]
+  (let [f (->> [label destination]
+               (apply (juxt cache maybe log))
+               (apply comp))]
+    (f step-fn)))
