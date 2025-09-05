@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file. This change
 ### Changed
 - `workflow.core/make` expects _labels_
 - input parameters are available under the `:in` key
+### Removed
+- automatic generation of labels
 
 ## [0.2.0] - 2025-08-28
 ### Added
