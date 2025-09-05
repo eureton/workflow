@@ -10,5 +10,6 @@
                  (map step/embellish)
                  (apply comp))]
       (f {:params params
+          :temp params
           :ok? true
           :results []}))))

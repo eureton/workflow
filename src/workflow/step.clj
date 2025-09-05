@@ -35,7 +35,7 @@
                         (first)
                         (peek))]
         (cond-> env
-          destination (assoc-in [:params destination] result))))))
+          destination (assoc-in [:temp destination] result))))))
 
 (defn embellish [[label step-fn destination]]
   (let [f (->> [label destination]
