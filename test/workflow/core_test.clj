@@ -101,3 +101,18 @@
     (is (some?     (get result-1 2)))
     (is (= wf/FAIL (get result-2 2)))
     (is (= wf/FAIL out))))
+
+(defn- adder [from]
+  (fn [env]
+    (-> env
+        (get-in [:temp from])
+        (+ 100))))
+
+(deftest destination
+  (let [workflow (wf/make
+             [:add-to-w (adder :w) :x]
+             [:add-to-x (adder :x) :y]
+             [:add-to-y (adder :y) :z])
+        {:keys [ok? out]} (workflow {:w 4})]
+    (is (= true ok?))
+    (is (= 304 out))))
