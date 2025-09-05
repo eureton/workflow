@@ -1,4 +1,4 @@
-(defproject com.eureton/workflow "0.2.0"
+(defproject com.eureton/workflow "0.3.0"
   :description "Idiomatic ROP-based workflow DSL in Clojure."
   :url "https://github.com/eureton/workflow"
   :license {:name "MIT"
