@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## [0.3.0] - 2025-09-05
+### Added
+- access to results of previous steps (#3)
+- _destination_ keys
+- _labels_
+- delivers result of last step under the `:out` key
+### Changed
+- `workflow.core/make` expects _labels_
+- input parameters are available under the `:in` key
+
 ## [0.2.0] - 2025-08-28
 ### Added
 - step composition
@@ -13,5 +23,6 @@ All notable changes to this project will be documented in this file. This change
 ### Added
 - project scaffold
 
-[Unreleased]: https://github.com/eureton/workflow/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/eureton/workflow/compare/0.3.0...HEAD
+[0.3.0]: https://github.com/eureton/workflow/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/eureton/workflow/compare/0.1.0...0.2.0
