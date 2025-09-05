@@ -5,11 +5,15 @@
 (defn log [label]
   (fn [step]
     (fn [env]
-      (let [log (try
-                  (let [result (step env)]
-                    [label (if (not= FAIL result) :ok :error) result])
-                  (catch Exception e
-                    [label :error e]))]
+      (let [result (try
+                     (step env)
+                     (catch Exception e e))
+            log [label
+                 (if (or (= FAIL result)
+                         (instance? Exception result))
+                   :error
+                   :ok)
+                 result]]
         (-> env
             (assoc :ok? (-> log (get 1) (= :ok)))
             (update :results conj log))))))
