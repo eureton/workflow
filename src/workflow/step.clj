@@ -16,6 +16,7 @@
                  result]]
         (-> env
             (assoc :ok? (-> log (get 1) (= :ok)))
+            (assoc :out result)
             (update :results conj log))))))
 
 (defn maybe [_ _]
