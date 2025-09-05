@@ -1,5 +1,6 @@
 (ns workflow.core-test
-  (:require [clojure.test :refer [deftest is]]
+  (:require [clojure.test :refer [deftest is use-fixtures]]
+            [spy.core :refer [spy called-once? not-called?]]
             [workflow.core :as wf]))
 
 (defn- validate-email [env]
@@ -18,6 +19,16 @@
   (when (-> env :in :connection-string nil?)
     wf/FAIL))
 
+(defn- with-spies [f]
+  (with-redefs [validate-email (spy validate-email)
+                update-in-database (spy update-in-database)
+                notify-stakeholders (spy notify-stakeholders)
+                validate-username (spy validate-username)
+                fetch-from-database (spy fetch-from-database)]
+    (f)))
+
+(use-fixtures :each #'with-spies)
+
 (deftest one
   (let [workflow (wf/make
                    [:validate-email validate-email])
@@ -28,7 +39,8 @@
     (is (= :validate-email label))
     (is (= :ok status))
     (is (some? result))
-    (is (= 12 out))))
+    (is (= 12 out))
+    (is (called-once? validate-email))))
 
 (deftest two
   (let [workflow (wf/make
@@ -44,7 +56,9 @@
     (is (= :ok (get result-2 1)))
     (is (some? (get result-1 2)))
     (is (nil?  (get result-2 2)))
-    (is (nil? out))))
+    (is (nil? out))
+    (is (called-once? validate-email))
+    (is (called-once? update-in-database))))
 
 (deftest three
   (let [workflow (wf/make
@@ -64,7 +78,10 @@
     (is (some?                         (get result-1 2)))
     (is (nil?                          (get result-2 2)))
     (is (instance? ArithmeticException (get result-3 2)))
-    (is (instance? ArithmeticException out))))
+    (is (instance? ArithmeticException out))
+    (is (called-once? validate-email))
+    (is (called-once? update-in-database))
+    (is (called-once? notify-stakeholders))))
 
 (deftest short-circuit
   (let [workflow (wf/make
@@ -82,7 +99,11 @@
     (is (= :error (get result-2 1)))
     (is (some?                          (get result-1 2)))
     (is (instance? NullPointerException (get result-2 2)))
-    (is (instance? NullPointerException out))))
+    (is (instance? NullPointerException out))
+    (is (called-once? validate-email))
+    (is (called-once? validate-username))
+    (is (not-called? update-in-database))
+    (is (not-called? notify-stakeholders))))
 
 (deftest provoke-failure
   (let [workflow (wf/make
@@ -100,7 +121,11 @@
     (is (= :error (get result-2 1)))
     (is (some?     (get result-1 2)))
     (is (= wf/FAIL (get result-2 2)))
-    (is (= wf/FAIL out))))
+    (is (= wf/FAIL out))
+    (is (called-once? validate-email))
+    (is (called-once? fetch-from-database))
+    (is (not-called? update-in-database))
+    (is (not-called? notify-stakeholders))))
 
 (defn- adder [from]
   (fn [env]
