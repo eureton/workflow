@@ -23,5 +23,18 @@
     (cond-> env
       (:ok? env) (step))))
 
-(defn embellish [label]
-  (comp maybe (log label)))
+(defn cache [label destination]
+  (fn [step]
+    (fn [env]
+      (let [env (step env)
+            result (->> env
+                        (:results)
+                        (filter (comp #{label} first))
+                        (first)
+                        (peek))]
+        (assoc-in env [:params destination] result)))))
+
+(defn embellish [label destination]
+  (comp (cache label destination)
+        maybe
+        (log label)))
