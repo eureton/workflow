@@ -135,9 +135,9 @@
 
 (deftest destination
   (let [workflow (wf/make
-             [:add-to-w (adder :w) :x]
-             [:add-to-x (adder :x) :y]
-             [:add-to-y (adder :y) :z])
+                   [:add-to-w (adder :w) :x]
+                   [:add-to-x (adder :x) :y]
+                   [:add-to-y (adder :y) :z])
         {:keys [ok? out]} (workflow {:w 4})]
     (is (= true ok?))
     (is (= 304 out))))
