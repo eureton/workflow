@@ -3,19 +3,19 @@
             [workflow.core :as wf]))
 
 (defn- validate-email [env]
-  (count (get-in env [:params :email])))
+  (count (get-in env [:in :email])))
 
 (defn- update-in-database [env]
-  (get-in env [:params :db-ok?]))
+  (get-in env [:in :db-ok?]))
 
 (defn- notify-stakeholders [_]
   (/ 4 0))
 
 (defn- validate-username [env]
-  (->> env (:params) (:username) (re-find #"abc")))
+  (->> env (:in) (:username) (re-find #"abc")))
 
 (defn- fetch-from-database [env]
-  (when (-> env :params :connection-string nil?)
+  (when (-> env :in :connection-string nil?)
     wf/FAIL))
 
 (deftest one
