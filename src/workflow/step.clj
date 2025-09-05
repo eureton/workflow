@@ -32,7 +32,8 @@
                         (filter (comp #{label} first))
                         (first)
                         (peek))]
-        (assoc-in env [:params destination] result)))))
+        (cond-> env
+          destination (assoc-in [:params destination] result))))))
 
 (defn embellish [label destination]
   (comp (cache label destination)
