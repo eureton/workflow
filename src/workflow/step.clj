@@ -1,4 +1,5 @@
-(ns workflow.step)
+(ns workflow.step
+  (:require [clojure.set :as cljset]))
 
 (def ^:const FAIL :__fail__)
 
@@ -42,3 +43,14 @@
                (apply (juxt cache maybe log))
                (apply comp))]
     (f step-fn)))
+
+(defmacro |=| [params & body]
+  (let [params (-> params
+                   (set)
+                   (cljset/difference #{'env}))]
+    `(fn [~'env]
+       (let [{:keys [~@params]} (:temp ~'env)]
+         ~@body))))
+
+(defmacro defstep [fn-name params & tail]
+  `(def ~fn-name (|=| ~params ~@tail)))
