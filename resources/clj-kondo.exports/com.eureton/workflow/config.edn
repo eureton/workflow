@@ -1,0 +1,4 @@
+{:lint-as {workflow.step/|=| clojure.core/fn
+           workflow.step/defstep clojure.core/defn
+           workflow.core/|=| clojure.core/fn
+           workflow.core/defstep clojure.core/defn}}
