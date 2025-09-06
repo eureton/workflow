@@ -1,7 +1,6 @@
 (ns workflow.step-test
   (:require [clojure.test :refer [deftest is]]
-            [workflow.core :as wf]
-            [workflow.step :refer [defstep |=|]]))
+            [workflow.core :as wf :refer [defstep |=|]]))
 
 (defstep calculate-x [w]
   (+ w 1))
