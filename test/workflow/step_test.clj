@@ -30,3 +30,9 @@
     (is (=  6 x))
     (is (= 18 y))
     (is (= 54 z))))
+
+(deftest destructure-and-env
+  (let [workflow (wf/make
+                   [:add (|=| [x y env] (+ x y (get-in env [:in :z])))])
+        {:keys [out]} (workflow {:x 1 :y 10 :z 100})]
+    (is (= 111 out))))
