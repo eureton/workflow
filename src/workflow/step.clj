@@ -54,3 +54,7 @@
 
 (defmacro defstep [fn-name params & tail]
   `(def ~fn-name (|=| ~params ~@tail)))
+
+(defn nest [workflow]
+  (fn [data]
+    (-> data workflow :out)))

@@ -7,6 +7,8 @@
 
 (def ^:macro defstep #'step/defstep)
 
+(def nest step/nest)
+
 (defn make [& steps]
   (fn [params]
     (let [f (->> steps

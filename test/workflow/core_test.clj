@@ -1,7 +1,7 @@
 (ns workflow.core-test
   (:require [clojure.test :refer [deftest is use-fixtures]]
             [spy.core :refer [spy called-once? not-called?]]
-            [workflow.core :as wf]))
+            [workflow.core :as wf :refer [|=|]]))
 
 (defn- validate-email [data]
   (count (:email data)))
@@ -141,3 +141,15 @@
         {:keys [ok? out]} (workflow {:w 4})]
     (is (= true ok?))
     (is (= 304 out))))
+
+(deftest nesting
+  (let [inner (wf/make
+                [:double-x (|=| [x] (* 2 x)) :a]
+                [:treble-a (|=| [a] (* 3 a)) :b])
+        outer (wf/make
+                [:add-to-w (|=| [w] (+ 10 w))  :x]
+                [:do-inner (wf/nest inner)     :y]
+                [:add-to-y (|=| [y] (+ 100 y)) :z])
+        {:keys [ok? out]} (outer {:w 2})]
+    (is (= true ok?))
+    (is (= 172 out))))
