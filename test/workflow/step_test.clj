@@ -33,6 +33,6 @@
 
 (deftest destructure-and-env
   (let [workflow (wf/make
-                   [:add (|=| [x y env] (+ x y (get-in env [:in :z])))])
+                   [:add (|=| [x y data] (+ x y (:z data)))])
         {:keys [out]} (workflow {:x 1 :y 10 :z 100})]
     (is (= 111 out))))

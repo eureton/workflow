@@ -7,7 +7,7 @@
   (fn [step]
     (fn [env]
       (let [result (try
-                     (step env)
+                     (-> env :temp step)
                      (catch Exception e e))
             log [label
                  (if (or (= FAIL result)
@@ -47,9 +47,9 @@
 (defmacro |=| [params & body]
   (let [params (-> params
                    (set)
-                   (cljset/difference #{'env}))]
-    `(fn [~'env]
-       (let [{:keys [~@params]} (:temp ~'env)]
+                   (cljset/difference #{'data}))]
+    `(fn [~'data]
+       (let [{:keys [~@params]} ~'data]
          ~@body))))
 
 (defmacro defstep [fn-name params & tail]
