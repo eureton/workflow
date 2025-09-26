@@ -3,20 +3,20 @@
             [spy.core :refer [spy called-once? not-called?]]
             [workflow.core :as wf]))
 
-(defn- validate-email [env]
-  (count (get-in env [:in :email])))
+(defn- validate-email [data]
+  (count (:email data)))
 
-(defn- update-in-database [env]
-  (get-in env [:in :db-ok?]))
+(defn- update-in-database [data]
+  (:db-ok? data))
 
 (defn- notify-stakeholders [_]
   (/ 4 0))
 
-(defn- validate-username [env]
-  (->> env (:in) (:username) (re-find #"abc")))
+(defn- validate-username [data]
+  (->> data (:username) (re-find #"abc")))
 
-(defn- fetch-from-database [env]
-  (when (-> env :in :connection-string nil?)
+(defn- fetch-from-database [data]
+  (when (-> data :connection-string nil?)
     wf/FAIL))
 
 (defn- with-spies [f]
@@ -128,9 +128,9 @@
     (is (not-called? notify-stakeholders))))
 
 (defn- adder [from]
-  (fn [env]
-    (-> env
-        (get-in [:temp from])
+  (fn [data]
+    (-> data
+        (get from)
         (+ 100))))
 
 (deftest destination

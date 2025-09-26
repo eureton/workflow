@@ -7,7 +7,7 @@
   (fn [step]
     (fn [env]
       (let [result (try
-                     (step env)
+                     (-> env :temp step)
                      (catch Exception e e))
             log [label
                  (if (or (= FAIL result)
