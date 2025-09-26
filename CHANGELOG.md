@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-09-26
+### Changed
+- step input to be the `:temp` hash (#7)
+
 ## [0.4.0] - 2025-09-06
 ### Added
 - `defstep` and `|=|` macros to `workflow.step` (#2)
@@ -29,7 +33,8 @@ All notable changes to this project will be documented in this file. This change
 ### Added
 - project scaffold
 
-[Unreleased]: https://github.com/eureton/workflow/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/eureton/workflow/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/eureton/workflow/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/eureton/workflow/compare/0.3.0...0.4.0
 [0.3.0]: https://github.com/eureton/workflow/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/eureton/workflow/compare/0.1.0...0.2.0
